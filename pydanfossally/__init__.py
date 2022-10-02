@@ -59,6 +59,7 @@ class DanfossAlly:
         self.devices[device["id"]]["name"] = device["name"].strip()
         self.devices[device["id"]]["online"] = device["online"]
         self.devices[device["id"]]["update"] = device["update_time"]
+
         if "model" in device:
             self.devices[device["id"]]["model"] = device["model"]
         elif "device_type" in device:
@@ -115,6 +116,18 @@ class DanfossAlly:
                     self.devices[device["id"]]["window_open"] = True
                 else:
                     self.devices[device["id"]]["window_open"] = False
+            elif status["code"] == "banner_ctrl":
+                localOverride = status["value"]
+                if localOverride == "true":
+                    self.devices[device["id"]]["local_override"] = True
+                else:
+                    self.devices[device["id"]]["local_override"] = False
+            elif status["code"] == "work_state":
+                workState = status["value"]
+                if workState == "Heat":
+                    self.devices[device["id"]]["heating"] = True
+                else:
+                    self.devices[device["id"]]["heating"] = False
 
             if status["code"] in ["child_lock", "mode", "work_state", "banner_ctrl"]:
                 self.devices[device["id"]][status["code"]] = status["value"]
